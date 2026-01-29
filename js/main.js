@@ -1,4 +1,11 @@
+window.onload = function () {
+    const container = document.getElementById("game");
+    loadGameForStep(state.step, container);
+};
+
 function loadGameForStep(step, container) {
+    container.innerHTML = ""; // nettoie l'écran
+
     switch (step) {
         case 0: jeux0(container); break;
         case 1: jeux1(container); break;
@@ -9,7 +16,7 @@ function loadGameForStep(step, container) {
         case 6: jeux6(container); break;
         case 7: jeux7(container); break;
         case 8: jeux8(container); break;
-        default: showEndScreen();
+        default:
+            container.innerHTML = "<h2>🎉 Jeu terminé !</h2>";
     }
 }
-

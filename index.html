@@ -1,153 +1,144 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Jeux GPS</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌙 Lune Malicieuse</title>
+  <style>
+    /* Effet CRT (vieux moniteur) */
+    body {
+      background: #0a0a0a;
+      color: #d4af37;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(18, 16, 16, 0.1) 0px,
+        rgba(0, 0, 0, 0.3) 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+      animation: scanlines 0.5s linear infinite;
+    }
+    @keyframes scanlines {
+      from { background-position: 0 0; }
+      to { background-position: 0 4px; }
+    }
 
-<style>
-:root {
-  --gold:#d4af37; --bg:#0a0a0a; --blue:#3498db;
-}
-* { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, sans-serif; }
+    /* Logo Lune Malicieuse */
+    #logo {
+      width: 150px;
+      margin: 20px auto;
+      display: block;
+    }
 
-body {
-  background: var(--bg);
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:white;
-}
+    /* Halo GPS */
+    #gps-halo {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 0 20px currentColor;
+      transition: all 0.5s;
+    }
+    .gps-blue { background: rgba(0, 247, 255, 0.2); color: #00f7ff; }
+    .gps-green { background: rgba(0, 255, 65, 0.2); color: #00ff41; }
+    .gps-orange { background: rgba(255, 140, 0, 0.2); color: #ff8c00; }
+    .gps-red { background: rgba(255, 51, 51, 0.2); color: #ff3333; }
 
-#game-container {
-  width:95%;
-  max-width:450px;
-  height:92vh;
-  border:2px solid var(--gold);
-  border-radius:25px;
-  position:relative;
-  overflow:hidden;
-}
+    /* Boussole */
+    #compass {
+      width: 200px;
+      height: 200px;
+      border: 3px double #d4af37;
+      border-radius: 50%;
+      margin: 20px auto;
+      position: relative;
+      transform: rotate(0deg);
+      transition: transform 0.5s;
+    }
+    #compass::after {
+      content: "N";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #d4af37;
+    }
 
-/* HEADER */
-#header {
-  position:absolute;
-  top:15px;
-  left:0; right:0;
-  display:flex;
-  justify-content:center;
-}
-#header img { width:50px; }
-
-/* BOUSSOLE */
-#compass {
-  position:absolute;
-  top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  width:260px; height:260px;
-  border:10px double var(--gold);
-  border-radius:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-#needle {
-  width:4px; height:80%;
-  background:red;
-  border-radius:2px;
-  transition:transform 0.2s;
-}
-
-/* ENERGY */
-#energy-bar {
-  position:absolute;
-  bottom:80px;
-  left:50%;
-  transform:translateX(-50%);
-  width:80%; height:12px;
-  background:#333;
-  border-radius:8px;
-}
-#energy-fill {
-  height:100%;
-  width:100%;
-  background:var(--blue);
-}
-
-/* FOOTER */
-#footer {
-  position:absolute;
-  bottom:15px;
-  left:0; right:0;
-  display:flex;
-  justify-content:space-around;
-}
-.btn {
-  width:50px; height:50px;
-  border-radius:50%;
-  border:2px solid var(--gold);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:1.5rem;
-}
-</style>
+    /* Dialogue Lune Malicieuse */
+    #dialogue {
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #d4af37;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 20px;
+      text-align: center;
+      min-height: 50px;
+    }
+  </style>
 </head>
-
 <body>
+  <!-- Logo -->
+  <img id="logo" src="lune-malicieuse.png" alt="🌙 Lune Malicieuse">
 
-<div id="game-container">
+  <!-- Halo GPS -->
+  <div id="gps-halo" class="gps-red">>100m</div>
 
-  <div id="header">
-    <img src="38aac036-c6c7-4a1e-9a31-380bc310a997.png">
-  </div>
+  <!-- Boussole -->
+  <div id="compass"></div>
 
-  <div id="compass">
-    <div id="needle"></div>
-  </div>
+  <!-- Dialogue du narrateur -->
+  <div id="dialogue">"Alors, on se perd déjà ? 😏"</div>
 
-  <div id="energy-bar">
-    <div id="energy-fill"></div>
-  </div>
+  <script>
+    // Simulation GPS (à remplacer par la vraie détection)
+    let distance = 120; // En mètres
+    const gpsHalo = document.getElementById("gps-halo");
 
-  <div id="footer">
-    <div class="btn">👤</div>
-    <div class="btn" onclick="toggleCompass()">🧭</div>
-    <div class="btn">⚙️</div>
-  </div>
+    function updateGPS() {
+      if (distance < 5) {
+        gpsHalo.className = "gps-blue";
+        gpsHalo.textContent = "<5m";
+      } else if (distance < 20) {
+        gpsHalo.className = "gps-green";
+        gpsHalo.textContent = "<20m";
+      } else if (distance < 100) {
+        gpsHalo.className = "gps-orange";
+        gpsHalo.textContent = "20-100m";
+      } else {
+        gpsHalo.className = "gps-red";
+        gpsHalo.textContent = ">100m";
+      }
+    }
 
-</div>
+    // Simulation boussole (pointe vers le nord pour l'exemple)
+    const compass = document.getElementById("compass");
+    compass.style.transform = `rotate(${Math.random() * 360}deg)`;
 
-<script>
-let energy = 100;
-let compassOn = false;
-let angle = 0;
-
-const needle = document.getElementById("needle");
-const energyFill = document.getElementById("energy-fill");
-
-function toggleCompass(){
-  if(energy <= 0){
-    alert("Plus d'énergie !");
-    compassOn = false;
-    return;
-  }
-  compassOn = !compassOn;
-}
-
-function loop(){
-  if(compassOn && energy > 0){
-    angle += 2;
-    needle.style.transform = `rotate(${angle}deg)`;
-    energy -= 0.3;
-    if(energy < 0) energy = 0;
-    energyFill.style.width = energy + "%";
-  }
-  requestAnimationFrame(loop);
-}
-loop();
-</script>
-
+    // Dialogues aléatoires
+    const dialogues = [
+      "Tu es sûr de savoir lire une boussole ? 😏",
+      "Plus que 98% du chemin à parcourir... ou pas.",
+      "Si tu abandonnes maintenant, je te traite de lâcheur.",
+      "La Lune te regarde... et elle rit."
+    ];
+    const dialogueElement = document.getElementById("dialogue");
+    setInterval(() => {
+      dialogueElement.textContent = dialogues[Math.floor(Math.random() * dialogues.length)];
+    }, 5000);
+  </script>
 </body>
 </html>

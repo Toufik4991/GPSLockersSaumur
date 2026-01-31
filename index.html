@@ -1,195 +1,153 @@
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Saumur Quest - AR Edition</title>
+<title>Jeux GPS</title>
+
 <style>
-  :root {
-    --gold: #d4af37; --bg: #0a0a0a;
-    --green: #2ecc71; --orange: #e67e22; --red: #e74c3c; --blue: #3498db;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, sans-serif; }
-  body {
-    background: var(--bg);
-    color: white;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  #game-container {
-    width: 95%;
-    max-width: 450px;
-    height: 92vh;
-    border: 2px solid var(--gold);
-    border-radius: 25px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
-    background: linear-gradient(to bottom, #0a0a0a, #111);
-  }
+:root {
+  --gold:#d4af37; --bg:#0a0a0a; --blue:#3498db;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, sans-serif; }
 
-  /* HEADER - SMILEY LUNE */
-  #header {
-    position: absolute;
-    top: 15px; left: 15px; right: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-  }
-  #header img {
-    width: 50px;
-    height: 50px;
-  }
+body {
+  background: var(--bg);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+}
 
-  /* Boussole circulaire */
-  #compass-menu {
-    position: absolute;
-    top:50%; left:50%;
-    transform: translate(-50%, -50%);
-    width: 260px; height: 260px;
-    border: 10px double var(--gold);
-    border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
-    background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
-  }
-  #needle {
-    width: 4px; height: 80%;
-    background: linear-gradient(to bottom, #ff4500 50%, #fdfaf0 50%);
-    position: absolute; border-radius:2px;
-    transition: transform 0.2s cubic-bezier(0.1,0.5,0.1,1);
-  }
+#game-container {
+  width:95%;
+  max-width:450px;
+  height:92vh;
+  border:2px solid var(--gold);
+  border-radius:25px;
+  position:relative;
+  overflow:hidden;
+}
 
-  /* ENERGY BAR */
-  #energy-bar {
-    position: absolute;
-    bottom: 20px; left:50%;
-    transform: translateX(-50%);
-    width: 80%; height: 12px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  #energy-fill {
-    height: 100%;
-    width: 100%;
-    background: var(--blue);
-    transition: width 0.3s;
-  }
+/* HEADER */
+#header {
+  position:absolute;
+  top:15px;
+  left:0; right:0;
+  display:flex;
+  justify-content:center;
+}
+#header img { width:50px; }
 
-  /* FOOTER - boutons */
-  #footer {
-    position: absolute; bottom: 15px; left:0; right:0;
-    display: flex; justify-content: space-around;
-    z-index:2000;
-  }
-  .circle-btn {
-    width: 50px; height: 50px;
-    border-radius: 50%;
-    background: rgba(20,20,20,0.9);
-    border: 2px solid var(--gold);
-    display: flex; justify-content: center; align-items: center;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .circle-btn:active { transform: scale(0.9); }
+/* BOUSSOLE */
+#compass {
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:260px; height:260px;
+  border:10px double var(--gold);
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+#needle {
+  width:4px; height:80%;
+  background:red;
+  border-radius:2px;
+  transition:transform 0.2s;
+}
+
+/* ENERGY */
+#energy-bar {
+  position:absolute;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%);
+  width:80%; height:12px;
+  background:#333;
+  border-radius:8px;
+}
+#energy-fill {
+  height:100%;
+  width:100%;
+  background:var(--blue);
+}
+
+/* FOOTER */
+#footer {
+  position:absolute;
+  bottom:15px;
+  left:0; right:0;
+  display:flex;
+  justify-content:space-around;
+}
+.btn {
+  width:50px; height:50px;
+  border-radius:50%;
+  border:2px solid var(--gold);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:1.5rem;
+}
 </style>
 </head>
 
 <body>
+
 <div id="game-container">
 
-  <!-- HEADER SMILEY -->
   <div id="header">
-    <img src="38aac036-c6c7-4a1e-9a31-380bc310a997.png" alt="Smiley Lune">
+    <img src="38aac036-c6c7-4a1e-9a31-380bc310a997.png">
   </div>
 
-  <!-- Boussole -->
-  <div id="compass-menu">
+  <div id="compass">
     <div id="needle"></div>
   </div>
 
-  <!-- ENERGY BAR -->
   <div id="energy-bar">
     <div id="energy-fill"></div>
   </div>
 
-  <!-- FOOTER BOUTONS -->
   <div id="footer">
-    <div class="circle-btn" onclick="openProfile()">👤</div>
-    <div class="circle-btn" onclick="toggleCompass()">🧭</div>
-    <div class="circle-btn" onclick="openOptions()">⚙️</div>
+    <div class="btn">👤</div>
+    <div class="btn" onclick="toggleCompass()">🧭</div>
+    <div class="btn">⚙️</div>
   </div>
 
 </div>
 
 <script>
-let energy = 100; // énergie initiale
-let needle = document.getElementById('needle');
-let energyFill = document.getElementById('energy-fill');
-let compassActive = false;
-
-// Rotation simulée de la boussole pour test
+let energy = 100;
+let compassOn = false;
 let angle = 0;
-function rotateNeedle() {
-  if(compassActive && energy > 0){
-    angle += 2; // rotation continue
-    needle.style.transform = `rotate(${angle}deg)`;
-    energy -= 0.5; 
-    if(energy < 0) energy = 0;
-    energyFill.style.width = energy + "%";
-  }
-  requestAnimationFrame(rotateNeedle);
-}
-rotateNeedle();
+
+const needle = document.getElementById("needle");
+const energyFill = document.getElementById("energy-fill");
 
 function toggleCompass(){
   if(energy <= 0){
-    alert("Plus d'énergie ! Joue aux mini-jeux pour la recharger.");
-    compassActive = false;
+    alert("Plus d'énergie !");
+    compassOn = false;
     return;
   }
-  compassActive = !compassActive;
+  compassOn = !compassOn;
 }
 
-function openProfile(){ alert("Profil"); }
-function openOptions(){ alert("Options"); }
-
-// fonction pour simuler gain énergie depuis mini-jeux
-function gainEnergy(amount){
-  energy += amount;
-  if(energy > 100) energy = 100;
-  energyFill.style.width = energy + "%";
-    <h1>JEUX GPS</h1>
-  <p>Point GPS en cours :</p>
-
-  <div id="game"></div>
-
-  <!-- Scripts principaux -->
-  <script src="js/state.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/gps.js"></script>
-  <script src="js/main.js"></script>
-
-  <!-- Mini-jeux -->
-  <script src="js/games/jeux0.js"></script>
-  <script src="js/games/jeux1.js"></script>
-  <script src="js/games/jeux2.js"></script>
-  <script src="js/games/jeux3.js"></script>
-  <script src="js/games/jeux4.js"></script>
-  <script src="js/games/jeux5.js"></script>
-  <script src="js/games/jeux6.js"></script>
-  <script src="js/games/jeux7.js"></script>
-  <script src="js/games/jeux8.js"></script>
+function loop(){
+  if(compassOn && energy > 0){
+    angle += 2;
+    needle.style.transform = `rotate(${angle}deg)`;
+    energy -= 0.3;
+    if(energy < 0) energy = 0;
+    energyFill.style.width = energy + "%";
+  }
+  requestAnimationFrame(loop);
 }
+loop();
 </script>
-</body>
-</html>
-
 
 </body>
 </html>
